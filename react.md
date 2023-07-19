@@ -1,4 +1,4 @@
-#### UseRef
+#### useRef
 
 Un hook para que el componente tenga informacion que se pueda actualizar pero que esta no desencadene nuevos renderizados.
 
@@ -13,3 +13,11 @@ Este hook es utilizado para hacer referencias al DOM y asi poder modificar y/o u
 `<video ref={ref} src={src} loop playsInline />`
 `ref.current.play()` o `ref.current.pause()`
 
+#### useEffect
+
+Este hook te permiten \"salir\" de React y sincronizar tus componentes con algun sistema externo. Su uso principal es:
+
+- No necesitas Efectos para transformar los datos para el renderizado.
+- No necesitas Efectos para manejar eventos de usuario.
+
+En otros casos se deben de valorar el uso de este elemento, analizar el problema para encontrar una solucion alterna. Las dependencias innecesarias pueden causar que tu Efecto se ejecute frecuentemente, incluso llegar a crear un ciclo infinito.
