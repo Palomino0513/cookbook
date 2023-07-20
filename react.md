@@ -31,7 +31,7 @@ Usos comunes de las referencias.
 Buenas practicas:
 
 - __Trata a las refs como una puerta de escape.__ Las refs son utiles cuando trabajas con sistemas externos o APIs del navegador. Si mucho de la logica de tu aplicacion y del flujo de los datos depende de las refs, es posible que quieras reconsiderar tu enfoque.
-- __No leas o escribas ref.current durante el renderizado.__ Si se necesita alguna informacion durante el renderizado, usa en su lugar el estado. Como React no sabe cuando ref.current cambia, incluso leerlo mientras se renderiza hace que el comportamiento de tu componente sea dificil de predecir. (La unica excepcion a esto es codigo como if (!ref.current) ref.current = new Thing() que solo asigna la ref una vez durante el renderizado inicial).
+- __No leas o escribas ref.current durante el renderizado.__ Si se necesita alguna informacion durante el renderizado, usa en su lugar el estado. Como React no sabe cuando ref.current cambia, incluso leerlo mientras se renderiza hace que el comportamiento de tu componente sea dificil de predecir. (La unica excepcion a esto es codigo como `if (!ref.current) ref.current = new Thing()` que solo asigna la ref una vez durante el renderizado inicial).
 
 
 #### useEffect
@@ -42,3 +42,47 @@ Este hook te permiten \"salir\" de React y sincronizar tus componentes con algun
 - No necesitas Efectos para manejar eventos de usuario.
 
 En otros casos se deben de valorar el uso de este elemento, analizar el problema para encontrar una solucion alterna. Las dependencias innecesarias pueden causar que tu Efecto se ejecute frecuentemente, incluso llegar a crear un ciclo infinito.
+
+Para declarar un efecto en tu componente, importa el Hook useEffect desde React:
+
+`import { useEffect } from 'react';
+function MyComponent() {
+  useEffect(() => {
+    // El codigo aqui se ejecutara despues de \*cada\* renderizado
+  });
+  return <div />;
+}`
+
+Recordemos que estos hook hacen que \"salgas\" de React, por lo cual debes de tener estas consideracion para su uso:
+
+- A veces, es lento. Sincronizar con un sistema externo no siempre es instantaneo, por lo que es posible que desees evitar hacerlo a menos que sea necesario.
+- A veces, esta mal. Por ejemplo, no quieres desencadenar una animacion de desvanecimiento en un componente en cada pulsacion de tecla. La animacion solo se debe reproducir cuando el componente aparece por primera vez.
+
+Tambien este hook tiene diferentes comportamientos dependiento la configuracion que uses:
+
+`useEffect(() => {
+  // Esto se ejecuta despues de cada renderizado
+});`
+
+`useEffect(() => {
+  // Esto solo se ejecuta en el montaje (cuando el componente aparece)
+}, []);`
+
+`useEffect(() => {
+  // Esto se ejecuta en el montaje \*y tambien\* si a o b han cambiado desde el ultimo renderizado
+}, [a, b]);`
+
+Lo mas recomendable es siempre hacer una funcion para desmontar y desvicular eventos o detener procesos que se iniciaron en el montaje del componente.
+
+#### useEffectEvent
+
+Utiliza un Hook especial llamado __useEffectEvent__ para extraer esta logica no reactiva de su Efecto:
+
+`import { useEffect, useEffectEvent } from 'react';
+
+function ChatRoom({ roomId, theme }) {
+  const onConnected = useEffectEvent(() => {
+    showNotification('Conectado!', theme);
+  });`
+
+  
