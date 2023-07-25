@@ -85,4 +85,3 @@ function ChatRoom({ roomId, theme }) {
     showNotification('Conectado!', theme);
   });`
 
-  
