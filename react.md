@@ -85,3 +85,24 @@ function ChatRoom({ roomId, theme }) {
     showNotification('Conectado!', theme);
   });`
 
+Ahora puedes llamar al Evento de Efecto onConnected desde dentro de tu Efecto:
+
+`function ChatRoom({ roomId, theme }) {
+  const onConnected = useEffectEvent(() => {
+    showNotification('Conectado!', theme);
+  });
+
+  useEffect(() => {
+    const connection = createConnection(serverUrl, roomId);
+    connection.on('connected', () => {
+      onConnected();
+    });
+    connection.connect();
+    return () => connection.disconnect();
+  }, [roomId]);
+  // ...`
+
+Los Eventos de Efecto no son reactivos, deben ser omitidos de las dependencias y estos tienen un uso muy limitado:
+
+- Llamalos solo desde dentro Efectos.
+- Nunca los pases a otros componentes o Hooks.
