@@ -1,4 +1,4 @@
-#### useRef
+### useRef
 
 Un hook para que el componente tenga informacion que se pueda actualizar pero que esta no desencadene nuevos renderizados.
 
@@ -34,7 +34,7 @@ Buenas practicas:
 - __No leas o escribas ref.current durante el renderizado.__ Si se necesita alguna informacion durante el renderizado, usa en su lugar el estado. Como React no sabe cuando ref.current cambia, incluso leerlo mientras se renderiza hace que el comportamiento de tu componente sea dificil de predecir. (La unica excepcion a esto es codigo como `if (!ref.current) ref.current = new Thing()` que solo asigna la ref una vez durante el renderizado inicial).
 
 
-#### useEffect
+### useEffect
 
 Este hook te permiten \"salir\" de React y sincronizar tus componentes con algun sistema externo. Su uso principal es:
 
@@ -45,13 +45,15 @@ En otros casos se deben de valorar el uso de este elemento, analizar el problema
 
 Para declarar un efecto en tu componente, importa el Hook useEffect desde React:
 
-`import { useEffect } from 'react';
+```
+import { useEffect } from 'react';
 function MyComponent() {
   useEffect(() => {
     // El codigo aqui se ejecutara despues de \*cada\* renderizado
   });
   return <div />;
-}`
+}
+```
 
 Recordemos que estos hook hacen que \"salgas\" de React, por lo cual debes de tener estas consideracion para su uso:
 
@@ -60,34 +62,43 @@ Recordemos que estos hook hacen que \"salgas\" de React, por lo cual debes de te
 
 Tambien este hook tiene diferentes comportamientos dependiento la configuracion que uses:
 
-`useEffect(() => {
+```
+useEffect(() => {
   // Esto se ejecuta despues de cada renderizado
-});`
+});
+```
 
-`useEffect(() => {
+```
+useEffect(() => {
   // Esto solo se ejecuta en el montaje (cuando el componente aparece)
-}, []);`
+}, []);
+```
 
-`useEffect(() => {
+```
+useEffect(() => {
   // Esto se ejecuta en el montaje \*y tambien\* si a o b han cambiado desde el ultimo renderizado
-}, [a, b]);`
+}, [a, b]);
+```
 
 Lo mas recomendable es siempre hacer una funcion para desmontar y desvicular eventos o detener procesos que se iniciaron en el montaje del componente.
 
-#### useEffectEvent
+### useEffectEvent
 
 Utiliza un Hook especial llamado __useEffectEvent__ para extraer esta logica no reactiva de su Efecto:
 
-`import { useEffect, useEffectEvent } from 'react';
+```
+import { useEffect, useEffectEvent } from 'react';
 
 function ChatRoom({ roomId, theme }) {
   const onConnected = useEffectEvent(() => {
     showNotification('Conectado!', theme);
-  });`
+  });
+```
 
 Ahora puedes llamar al Evento de Efecto onConnected desde dentro de tu Efecto:
 
-`function ChatRoom({ roomId, theme }) {
+```
+function ChatRoom({ roomId, theme }) {
   const onConnected = useEffectEvent(() => {
     showNotification('Conectado!', theme);
   });
@@ -100,7 +111,8 @@ Ahora puedes llamar al Evento de Efecto onConnected desde dentro de tu Efecto:
     connection.connect();
     return () => connection.disconnect();
   }, [roomId]);
-  // ...`
+  // ...
+```
 
 Los Eventos de Efecto no son reactivos, deben ser omitidos de las dependencias y estos tienen un uso muy limitado:
 
