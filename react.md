@@ -1,14 +1,18 @@
+# React Js Cookbook
 ### useRef
 
-Un hook para que el componente tenga informacion que se pueda actualizar pero que esta no desencadene nuevos renderizados.
+Un hook para que el componente tenga informacion que se pueda actualizar pero
+que esta no desencadene nuevos renderizados.
 
 `const ref = useRef(0);`
 
-Para usar el valor de la referencia se puede usar la promiedad de __current__ asi como actualizar su valor.
+Para usar el valor de la referencia se puede usar la promiedad de __current__
+asi como actualizar su valor.
 
 `ref.current = ref.current + 1;`
 
-Este hook es utilizado para hacer referencias al DOM y asi poder modificar y/o usar sus propiedades.
+Este hook es utilizado para hacer referencias al DOM y asi poder modificar y/o
+usar sus propiedades.
 
 `<video ref={ref} src={src} loop playsInline />`
 `ref.current.play()` o `ref.current.pause()`
@@ -30,18 +34,29 @@ Usos comunes de las referencias.
 
 Buenas practicas:
 
-- __Trata a las refs como una puerta de escape.__ Las refs son utiles cuando trabajas con sistemas externos o APIs del navegador. Si mucho de la logica de tu aplicacion y del flujo de los datos depende de las refs, es posible que quieras reconsiderar tu enfoque.
-- __No leas o escribas ref.current durante el renderizado.__ Si se necesita alguna informacion durante el renderizado, usa en su lugar el estado. Como React no sabe cuando ref.current cambia, incluso leerlo mientras se renderiza hace que el comportamiento de tu componente sea dificil de predecir. (La unica excepcion a esto es codigo como `if (!ref.current) ref.current = new Thing()` que solo asigna la ref una vez durante el renderizado inicial).
-
+- __Trata a las refs como una puerta de escape.__ Las refs son utiles cuando
+  trabajas con sistemas externos o APIs del navegador. Si mucho de la logica
+  de tu aplicacion y del flujo de los datos depende de las refs, es posible
+  que quieras reconsiderar tu enfoque.
+- __No leas o escribas ref.current durante el renderizado.__ Si se necesita
+  alguna informacion durante el renderizado, usa en su lugar el estado. Como
+  React no sabe cuando ref.current cambia, incluso leerlo mientras se renderiza
+  hace que el comportamiento de tu componente sea dificil de predecir. (La unica
+  excepcion a esto es codigo como `if (!ref.current) ref.current = new Thing()`
+  que solo asigna la ref una vez durante el renderizado inicial).
 
 ### useEffect
 
-Este hook te permiten \"salir\" de React y sincronizar tus componentes con algun sistema externo. Su uso principal es:
+Este hook te permiten \"salir\" de React y sincronizar tus componentes con algun
+sistema externo. Su uso principal es:
 
 - No necesitas Efectos para transformar los datos para el renderizado.
 - No necesitas Efectos para manejar eventos de usuario.
 
-En otros casos se deben de valorar el uso de este elemento, analizar el problema para encontrar una solucion alterna. Las dependencias innecesarias pueden causar que tu Efecto se ejecute frecuentemente, incluso llegar a crear un ciclo infinito.
+En otros casos se deben de valorar el uso de este elemento, analizar el problema
+para encontrar una solucion alterna. Las dependencias innecesarias pueden causar
+que tu Efecto se ejecute frecuentemente, incluso llegar a crear un ciclo
+infinito.
 
 Para declarar un efecto en tu componente, importa el Hook useEffect desde React:
 
@@ -55,12 +70,18 @@ function MyComponent() {
 }
 ```
 
-Recordemos que estos hook hacen que \"salgas\" de React, por lo cual debes de tener estas consideracion para su uso:
+Recordemos que estos hook hacen que \"salgas\" de React, por lo cual debes de
+tener estas consideracion para su uso:
 
-- A veces, es lento. Sincronizar con un sistema externo no siempre es instantaneo, por lo que es posible que desees evitar hacerlo a menos que sea necesario.
-- A veces, esta mal. Por ejemplo, no quieres desencadenar una animacion de desvanecimiento en un componente en cada pulsacion de tecla. La animacion solo se debe reproducir cuando el componente aparece por primera vez.
+- A veces, es lento. Sincronizar con un sistema externo no siempre es
+  instantaneo, por lo que es posible que desees evitar hacerlo a menos que sea
+  necesario.
+- A veces, esta mal. Por ejemplo, no quieres desencadenar una animacion de
+  desvanecimiento en un componente en cada pulsacion de tecla. La animacion solo
+  se debe reproducir cuando el componente aparece por primera vez.
 
-Tambien este hook tiene diferentes comportamientos dependiento la configuracion que uses:
+Tambien este hook tiene diferentes comportamientos dependiento la configuracion
+que uses:
 
 ```
 useEffect(() => {
@@ -80,11 +101,13 @@ useEffect(() => {
 }, [a, b]);
 ```
 
-Lo mas recomendable es siempre hacer una funcion para desmontar y desvicular eventos o detener procesos que se iniciaron en el montaje del componente.
+Lo mas recomendable es siempre hacer una funcion para desmontar y desvicular
+eventos o detener procesos que se iniciaron en el montaje del componente.
 
 ### useEffectEvent
 
-Utiliza un Hook especial llamado __useEffectEvent__ para extraer esta logica no reactiva de su Efecto:
+Utiliza un Hook especial llamado __useEffectEvent__ para extraer esta logica no
+reactiva de su Efecto:
 
 ```
 import { useEffect, useEffectEvent } from 'react';
@@ -114,7 +137,37 @@ function ChatRoom({ roomId, theme }) {
   // ...
 ```
 
-Los Eventos de Efecto no son reactivos, deben ser omitidos de las dependencias y estos tienen un uso muy limitado:
+Los Eventos de Efecto no son reactivos, deben ser omitidos de las dependencias y
+estos tienen un uso muy limitado:
 
 - Llamalos solo desde dentro Efectos.
 - Nunca los pases a otros componentes o Hooks.
+
+### Hooks personalizados
+
+Los hooks personalizados son para componentes o funciones que se estaran
+reutiliznado. Cuando se crea un hook personalidado por convencion su nombre debe
+de empezar con __use__ seguido del nombre que se le quiera poner al hook en
+formato _upper cammel case_.
+
+## Recomendaciones
+
+React requiere experiancia bastante experiencia para poder dominarlo, debido a
+que se requiere hacerlo a la forma en que React recomienda de lo contrario el
+performance de la aplicacion se veria afectado, ademas de algunos
+comportamientos raros y bugs aparecerian en la aplicacion; por lo tanto se en
+lista una serie de recomedaciones a tener en cuenta en el momento que estemos
+creando nuestros componentes en React.
+
+- Si el código en tu Efecto debe ejecutarse como respuesta a una interacción
+  específica, mueve el código a un controlador de evento.
+- Si partes diferentes de tu Efecto deberían volverse a ejecutar por diferentes
+  razones, divídelo en diferentes Efectos.
+- Si quieres actualizar un estado basado en el estado anterior, pasa una función
+  actualizadora.
+- Si quieres leer el último valor sin «reaccionar» a él, extrae un Evento de
+  Efecto de tu Efecto.
+- En JavaScript, los objetos y funciones se consideran diferentes si se crean en
+  momentos diferentes.
+- Intenta evitar objetos y funciones como dependencias. Muévelos fuera del
+  componente o dentro del Efecto.
