@@ -12,6 +12,7 @@ Para detener los servicios de __sail__ se hace con el comando:
 
 `./vendor/bin/sail donw`
 
-Para hacer mas practico el uso de __sail__ puedes crear un alias editando el archivo ".bashrc" y agregando la siguiente linea:
+Para hacer mas practico el uso de __sail__ puedes crear un alias
+editando el archivo ".bashrc" y agregando la siguiente linea:
 
 `alias sail="./vendor/bin/sail"`

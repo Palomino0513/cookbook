@@ -1,4 +1,13 @@
 # React Js Cookbook
+### Modificacion de array como _State_
+
+| Accion     | Evita (muta el array)       | Preferido (retorna un nuevo array)       | Ejemplo     |
+|------------|-----------------------------|------------------------------------------|-------------|
+| Añadir     | push, unshift               | concat, [...arr] operador de propagación | `Pendiente` |
+| Eliminar   | pop, shift, splice          | filter, slice                            | `Pendiente` |
+| Reemplazar | splice, arr[i] = ... asigna | map                                      | `Pendiente` |
+| Ordenar    | reverse, sort               | copia el array primero                   | `Pendiente` |
+
 ### useRef
 
 Un hook para que el componente tenga informacion que se pueda actualizar pero
@@ -19,12 +28,12 @@ usar sus propiedades.
 
 Haciendo una comparacion con variables de estado.
 
-| las refs | las refs |
-| ----------- | ----------- |
-| `useRef(initialValue)` devuelve `{ current: initialValue }` | `useState(initialValue)` devuelve el valor actual de una variable de estado y una funcion asignadora del estado (`[value, setValue]`) |
-| No desencadena un rerenderizado cuando lo cambias. | Desencadena un rerenderizado cuando lo cambias. |
+| las refs                                                                                         | las refs                                                                                                                               |
+|--------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| `useRef(initialValue)` devuelve `{ current: initialValue }`                                      | `useState(initialValue)` devuelve el valor actual de una variable de estado y una funcion asignadora del estado (`[value, setValue]`)  |
+| No desencadena un rerenderizado cuando lo cambias.                                               | Desencadena un rerenderizado cuando lo cambias.                                                                                        |
 | Mutable: puedes modificar y actualizar el valor de __current__ fuera del proceso de renderizado. | \"Immutable\": necesitas usar la funcion asignadora del estado para modificar variables de estado para poner en cola un rerenderizado. |
-| No deberias leer (o escribir) el valor de __current__ durante el renderizado. | Puedes leer el estado en cualquier momento. Sin embargo, cada renderizado tiene su propia __instantanea__ del estado que no cambia. |
+| No deberias leer (o escribir) el valor de __current__ durante el renderizado.                    | Puedes leer el estado en cualquier momento. Sin embargo, cada renderizado tiene su propia __instantanea__ del estado que no cambia.    |
 
 Usos comunes de las referencias.
 
@@ -148,7 +157,30 @@ estos tienen un uso muy limitado:
 Los hooks personalizados son para componentes o funciones que se estaran
 reutiliznado. Cuando se crea un hook personalidado por convencion su nombre debe
 de empezar con __use__ seguido del nombre que se le quiera poner al hook en
-formato _upper cammel case_.
+formato _upper cammel case_. Ejemplo:
+
+```
+import { useState } from 'react';
+
+export function useFormInput(initialValue) {
+  const [value, setValue] = useState(initialValue);
+
+  function handleChange(e) {
+    setValue(e.target.value);
+  }
+
+  const inputProps = {
+    value: value,
+    onChange: handleChange
+  };
+
+  return inputProps;
+}
+```
+
+Los Hooks personalizados permiten compartir la lógica con estado pero no el
+estado en sí. Cada invocación al Hook es completamente independiente de
+cualquier otra invocación al mismo Hook.
 
 ## Recomendaciones
 
