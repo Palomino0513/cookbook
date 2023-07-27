@@ -187,6 +187,21 @@ valdria la pena hacer una breve busqueda para averiguar si no existe ya un hook
 para la necesidad que queremos cubrir ya que la comunidad es muy activa y es
 posible que ya exista un hook para nuestra necesidad.
 
+Puntos a considerar al hacer un hook.
+
+- Los Hooks personalizados te permiten compartir lógica entre componentes.
+- Los Hooks personalizados deben nombrarse comenzando con use, seguido por una
+  letra mayúscula.
+- Los Hooks personalizados solo comparten lógica con estado, no el estado en sí.
+- Puedes pasar valores reactivos de un Hook a otro, y se mantienen actualizados.
+- Todos los Hooks se vuelven a ejecutar cada vez que tu componente se vuelve a
+  renderizar.
+- El código de tus Hooks debe ser puro, como el código de tu componente.
+- Envuelve controladores de eventos recibidos por Hooks personalizados en
+  Eventos de Efecto.
+- No hagas Hooks personalizados como useMount. Conserva su propósito específico.
+- Depende de ti el cómo y dónde elegir los límites de tu código.
+
 ## Recomendaciones
 
 React requiere experiancia bastante experiencia para poder dominarlo, debido a
