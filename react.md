@@ -182,6 +182,11 @@ Los Hooks personalizados permiten compartir la lógica con estado pero no el
 estado en sí. Cada invocación al Hook es completamente independiente de
 cualquier otra invocación al mismo Hook.
 
+Antes de pensar en hacer un hook
+valdria la pena hacer una breve busqueda para averiguar si no existe ya un hook
+para la necesidad que queremos cubrir ya que la comunidad es muy activa y es
+posible que ya exista un hook para nuestra necesidad.
+
 ## Recomendaciones
 
 React requiere experiancia bastante experiencia para poder dominarlo, debido a
