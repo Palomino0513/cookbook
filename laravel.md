@@ -148,3 +148,130 @@ Route::get('/category/{category}', function (string $category) {
 
 #### Nombres en las Rutas
 
+A las rutas se les puede asignar nombre para hacer referencia a ellas, para ello
+se usa la funcion _name_, como se puede ver a continuacion:
+
+```
+Route::get(
+    '/user/profile',
+    [UserProfileController::class, 'show']
+)->name('profile');
+```
+
+En cuanto su uso se puede usar al llamar a un redirect.
+
+```
+// Generating URLs...
+$url = route('profile');
+ 
+// Generating Redirects...
+return redirect()->route('profile');
+ 
+return to_route('profile');
+```
+
+En caso de que la url necesite un parametro se puede hacer el redirect de la
+siguiente forma:
+
+```
+Route::get('/user/{id}/profile', function (string $id) {
+    // ...
+})->name('profile');
+ 
+$url = route('profile', ['id' => 1]);
+```
+
+Si solo necesitas generar la url se puede hacer de la siguiente fomra.
+
+`$url = route('profile', ['id' => 1, 'photos' => 'yes']);`
+
+#### Middleware
+
+Puedes usar middleware para agrupar rutas.
+
+```
+Route::middleware(['first', 'second'])->group(function () {
+    Route::get('/', function () {
+        // Uses first & second middleware...
+    });
+ 
+    Route::get('/user/profile', function () {
+        // Uses first & second middleware...
+    });
+});
+```
+
+#### Controllers
+
+Se pueden usar la funcion de _controller_ para agrupar varias rutas que estaran
+usando funciones del controlador.
+
+```
+use App\Http\Controllers\OrderController;
+ 
+Route::controller(OrderController::class)->group(function () {
+    Route::get('/orders/{id}', 'show');
+    Route::post('/orders', 'store');
+});
+```
+
+#### Subdomain
+
+La funcion de _domain_ para gestionar las url de ese subdominio.
+
+```
+Route::domain('{account}.example.com')->group(function () {
+    Route::get('user/{id}', function (string $account, string $id) {
+        // ...
+    });
+});
+```
+
+#### Prefix
+
+Se puede agrupar rutas y agregar un prefix a todas ellas.
+
+```
+Route::prefix('admin')->group(function () {
+    Route::get('/users', function () {
+        // Matches The "/admin/users" URL
+    });
+});
+```
+
+#### Ruta 404
+
+En caso de que necesites tener un comportamiento diferente al predeterminado,
+puedes modificar esta ruta mediante la siguiente funcion.
+
+```
+Route::fallback(function () {
+    // ...
+});
+```
+
+#### Formularios
+
+Para los formularios se deben de consiferar estos dos parametros para que las
+peticiones sean validas al mandarse las peticiones.
+
+```
+<form action="/example" method="POST">
+    @method('PUT')
+    @csrf
+</form>
+```
+
+#### Current Route
+
+Para obtener informacion de la ruta actual se puede hacer de la siguiente
+manera.
+
+```
+use Illuminate\Support\Facades\Route;
+ 
+$route = Route::current(); // Illuminate\Routing\Route
+$name = Route::currentRouteName(); // string
+$action = Route::currentRouteAction(); // string
+```
+
