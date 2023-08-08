@@ -275,3 +275,122 @@ $name = Route::currentRouteName(); // string
 $action = Route::currentRouteAction(); // string
 ```
 
+### Middleware
+
+Para crear un middle desde artisan es desde el siguiente comando.
+
+`php artisan make:middleware EnsureTokenIsValid`
+
+Donde uno de sus usos es validar token, como un ejemplo este codigo para enter
+el funcionamiento de los _middleware_ en _Laravel_.
+
+```
+<?php
+ 
+namespace App\Http\Middleware;
+ 
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+ 
+class EnsureTokenIsValid
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        if ($request->input('token') !== 'my-secret-token') {
+            return redirect('home');
+        }
+ 
+        return $next($request);
+    }
+}
+```
+
+Para aplicar un _middleware_ a una ruta se hace de la siguiente forma.
+
+```
+use App\Http\Middleware\Authenticate;
+ 
+Route::get('/profile', function () {
+    // ...
+})->middleware(Authenticate::class);
+```
+
+En caso de necesitar asignar multiples _middlewares_ a una ruta se puede ser
+con el uso de un array como se ve a contiunuacion.
+
+```
+Route::get('/', function () {
+    // ...
+})->middleware([First::class, Second::class]);
+```
+
+### Controllers
+
+Para crear un controlador usando artisan se debe ocupar el siguiente comando:
+
+`php artisan make:controller UserController`
+
+El codigo que se muestra a continuacion tiene uno de las implementaciones mas
+sencillas y comunes que se requieresn.
+
+```
+<?php
+ 
+namespace App\Http\Controllers;
+ 
+use App\Models\User;
+use Illuminate\View\View;
+ 
+class UserController extends Controller
+{
+    /**
+     * Show the profile for a given user.
+     */
+    public function show(string $id): View
+    {
+        return view('user.profile', [
+            'user' => User::findOrFail($id)
+        ]);
+    }
+}
+```
+
+Cuando una controlador va ser utilizado por una ruta, esta debe indicar la
+funcion que va utilizar al momento de ser declara.
+
+```
+use App\Http\Controllers\UserController;
+ 
+Route::get('/user/{id}', [UserController::class, 'show']);
+```
+
+#### Middleware
+
+Normalmente los _middleware_ se definen en las rutas, como se puede ver a
+continuacion.
+
+`Route::get('profile', [UserController::class, 'show'])->middleware('auth');`
+
+en caso de que necesites hacerlo desde el controlador, esto lo puedes hacer
+desde el *__construct*.
+
+```
+class UserController extends Controller
+{
+    /**
+     * Instantiate a new controller instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('log')->only('index');
+        $this->middleware('subscribed')->except('store');
+    }
+}
+```
